@@ -3,16 +3,25 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                  <button @click="AuthProvider('vkontakte')">auth Vkontakte</button>
-                  <!--  <facebook-login class="button"
-                    appId="233156417738643"
-                    @login="getUserData"
-                    @logout="onLogout"
-                    @get-initial-status="getUserData">
-                  </facebook-login> -->
-                    <button @click="logInWithFacebook">auth facebook</button>
-                    <button @click="get">get</button>
-                    <router-link :to="'/test'">test</router-link>
+                    <h3>Welcome, {{getUserName}}</h3>
+                    <div>
+                      <div v-for='album in albumList' :key='album.id'>
+                        <div class="row">
+                          <div class="col-md-5">
+                            <img :src="`${album.img}`">
+                            
+                          </div>
+                          <div class="col-md-3">
+                            <router-link to='/'>
+                              <h3>{{album.name}}</h3>
+                            </router-link>
+                              <p>files {{album.length}}</p>
+                            
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
               </div>
           </div>
 
@@ -21,57 +30,41 @@
 </template>
 
 <script>
-
+import {mapGetters} from 'vuex'
 export default {
-    name: 'Home',
     data() {
-        return {
-            userID: ''
-        }
+       return {
+        albumList: []
+       }
     },
     methods: {
-       AuthProvider(provider) {
-              this.$auth.authenticate(provider).then(response =>{
-                console.log(response)
-
-
-                }).catch(err => {
-                    console.log({err:err})
-                })
-
-            },
-            async logInWithFacebook(){
-
-              const self = this 
-                  window.FB.login(function(response) {
-                    if (response.authResponse) {
-                self.userID= response.authResponse.userID
-                      console.log(response)
-                    } else {
-                      alert("User cancelled login or did not fully authorize.");
-                    }
-                  });
-              return false;
-            },
-            get(){
-                
-              const self = this 
-
-              window.FB.api(
-                `/${self.userID}/`,
-                function (response) {
-                  
-                    console.log(response)
-                  
-                }
-            );
-            }
+   
     
  
     },
-    components: {
+    async created(){
+      // console.log(this.albums)
+      const self = this;
+      await this.$http(`https://graph.facebook.com/v6.0/${this.getUser}/albums?access_token=${this.getToken}&method=get&pretty=0&sdk=joey&suppress_http_code=1`).then(res=> {
+        self.$store.dispatch('setAlbums', res.data);
+      })
+      await this.$http(`https://graph.facebook.com/v6.0/${this.getUser}?access_token=${this.getToken}&method=get&pretty=0&sdk=joey&suppress_http_code=1`).then(res=> {
+        self.$store.dispatch('setUser', res.data);
+      })
+      JSON.parse(this.albums).data.forEach(async el => {
+        await self.$http(`https://graph.facebook.com/v6.0/${el.id}/photos?access_token=${this.getToken}&method=get&pretty=0&sdk=joey&suppress_http_code=1`).then(async res=> {
+            el['length'] = res.data.data.length;
+          await self.$http(`https://graph.facebook.com/v6.0/${res.data.data[0].id}/picture?access_token=${this.getToken}&debug=all&format=json&method=get&pretty=0&redirect=false&suppress_http_code=1&transport=cors`).then(res=> {
+              el['img'] = res.data.data.url;
+              self.albumList.push(el);
+          })
+        })
+      })
+    },
+    computed: {
+            ...mapGetters(['getUser', 'getToken', 'getUserName', 'albums'])
+        }
 
-    }
 }
 </script>
 

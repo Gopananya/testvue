@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router/index.js'
 import VueSocialauth from 'vue-social-auth';
 import axios from 'axios'
+import store from './store'
 Vue.prototype.$http = axios;
 Vue.use(VueSocialauth, {
   providers: {
@@ -16,6 +17,7 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+
   methods: {
         async initFacebook() {
             window.fbAsyncInit = function() {
@@ -38,9 +40,12 @@ new Vue({
             fjs.parentNode.insertBefore(js, fjs);
             },
         },
-        async created() {
-        await this.loadFacebookSDK(document, "script", "facebook-jssdk");
-        await this.initFacebook();
-    },
+
+  async created() {
+  await this.loadFacebookSDK(document, "script", "facebook-jssdk");
+  await this.initFacebook();
+},
+
+  store,
   render: h => h(App)
 }).$mount('#app')
