@@ -29,7 +29,7 @@ export default {
                     } else {
                       alert("User cancelled login or did not fully authorize.");
                     }
-                  },{scope: 'user_photos, publish_pages'});
+                  },{scope: 'user_photos'});
               return false;
             }  
     }

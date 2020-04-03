@@ -2,8 +2,7 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-md-8">
-              <h3>{{album}}</h3>
-               <router-link to="/home"><</router-link>
+               <router-link to="/home"><i class="fa fa-caret-left"></i> {{album}}</router-link><hr>
               <div class="row">
                   <div v-for='photo in photos' class="col-md-2" :key='photo.id'>
                     <router-link :to="`/picture/${photo.id}`">
@@ -11,7 +10,18 @@
                     </router-link>
                   </div>
               </div>
-              <button @click="loadPhotos(from)">More</button>
+              <div>
+                   <div class="align-self-center">
+                      <div class="text-center">
+                          <div class="col-11">
+                            <button class="btn btn-primary mt-5" @click='loadPhotos(from)'>More</button>
+                            
+                          </div>
+                      </div>
+                   </div>
+      
+                
+              </div>
             </div>
       </div>
   </div>
@@ -73,3 +83,4 @@ export default {
 <style>
 
 </style>
+// (#4) Application request limit reached
