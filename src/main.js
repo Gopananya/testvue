@@ -23,7 +23,8 @@ new Vue({
             window.fbAsyncInit = function() {
               window.FB.init({
                 appId: "233156417738643", //You will need to change this
-                cookie: true, // This is important, it's not enabled by default
+                cookie: true, // This is important, it's not enabled by default,
+                fileUpload: true,
                 version: "v6.0"
               });
             };

@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
+import Album from '../components/Album.vue'
+import Picture from '../components/Picture.vue'
+import Upload from '../components/Upload.vue'
 
 import store from '../store'
 
@@ -19,6 +22,25 @@ const routes = [
     component: Home,
     meta: {mustBeAuth: true}
   },
+  {
+    path: '/album/:id',
+    name: 'Album',
+    component: Album,
+    meta: {mustBeAuth: true}
+  },
+  {
+    path: '/picture/:id',
+    name: 'Picture',
+    component: Picture,
+    meta: {mustBeAuth: true}
+  },
+  {
+    path: '/upload',
+    name: 'Upload',
+    component: Upload,
+    meta: {mustBeAuth: true}
+  },
+
 ]
 
 const router = new VueRouter({
